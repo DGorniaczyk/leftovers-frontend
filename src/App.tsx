@@ -1,20 +1,18 @@
-import { Routes, Route, Link } from "react-router";
-import Home from "./pages/Home";
+import { createBrowserRouter, RouterProvider } from 'react-router';
 
-import "./App.css";
+import HomePage from './pages/Home';
+
+import './App.css';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <HomePage />,
+  },
+]);
 
 function App() {
-  return (
-    <>
-      <nav>
-        <Link to="/">Home</Link>
-      </nav>
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

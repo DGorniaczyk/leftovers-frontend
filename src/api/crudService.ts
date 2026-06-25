@@ -1,11 +1,7 @@
-import type { AxiosInstance } from "axios";
-import httpClient from "./axios.ts";
+import type { AxiosInstance } from 'axios';
+import httpClient from './axios.ts';
 
-export interface HttpService<
-  T,
-  CreateDto = Partial<T>,
-  UpdateDto = Partial<T>,
-> {
+export interface HttpService<T, CreateDto = Partial<T>, UpdateDto = Partial<T>> {
   getAll: () => Promise<T[]>;
   getById: (id: string | number) => Promise<T>;
   create: (payload: CreateDto) => Promise<T>;
@@ -13,11 +9,7 @@ export interface HttpService<
   remove: (id: string | number) => Promise<void>;
 }
 
-export function createHttpService<
-  T,
-  CreateDto = Partial<T>,
-  UpdateDto = Partial<T>,
->(
+export function createHttpService<T, CreateDto = Partial<T>, UpdateDto = Partial<T>>(
   resource: string,
   client: AxiosInstance = httpClient,
 ): HttpService<T, CreateDto, UpdateDto> {
