@@ -72,10 +72,8 @@ export default function Taskbar() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(isAuthenticated());
 
   useEffect(() => {
-    // subscribe to auth changes triggered in this window
     const unsubscribe = subscribe(() => setIsLoggedIn(isAuthenticated()));
 
-    // also listen for storage events from other tabs
     const onStorage = (e: StorageEvent) => {
       if (e.key === 'jwt') {
         setIsLoggedIn(Boolean(e.newValue));
