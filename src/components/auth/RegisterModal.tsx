@@ -34,7 +34,7 @@ export function RegisterModal({ open, onClose }: RegisterModalProps) {
     passwordValid,
     canSubmit,
     handleSubmit,
-  } = useRegisterModal({ onSuccess: onClose });
+  } = useRegisterModal({ open, onSuccess: onClose });
 
   return (
     <Dialog

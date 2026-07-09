@@ -1,12 +1,13 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from '../common/Snackbar';
 import { registerUser } from '../../api/auth/registerService';
 
 interface UseRegisterModalProps {
+  open: boolean;
   onSuccess?: () => void;
 }
 
-export function useRegisterModal({ onSuccess }: UseRegisterModalProps = {}) {
+export function useRegisterModal({ open, onSuccess }: UseRegisterModalProps) {
   const showSnackbar = useSnackbar();
 
   const [email, setEmail] = useState('');
@@ -20,6 +21,20 @@ export function useRegisterModal({ onSuccess }: UseRegisterModalProps = {}) {
     () => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(password),
     [password],
   );
+
+  const resetForm = () => {
+    setEmail('');
+    setPassword('');
+    setTermsAccepted(false);
+    setShowPassword(false);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (!open) {
+      resetForm();
+    }
+  }, [open]);
 
   const canSubmit = emailValid && passwordValid && termsAccepted && !loading;
 
@@ -37,6 +52,7 @@ export function useRegisterModal({ onSuccess }: UseRegisterModalProps = {}) {
         message:
           "You've successfully registered on our website. To complete the registration process, please check your email 📬",
       });
+      resetForm();
       onSuccess?.();
     } catch {
       showSnackbar({
