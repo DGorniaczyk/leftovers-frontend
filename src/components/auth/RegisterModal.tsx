@@ -166,7 +166,7 @@ export function RegisterModal({ open, onClose }: RegisterModalProps) {
           {loading ? <CircularProgress size={22} color="inherit" /> : 'Create an account'}
         </Button>
 
-        <Typography variant="body2" sx={{ mt: 1, textAlign: 'center' }}>
+        <Typography variant="body2" sx={{ mt: 1, textAlign: 'left' }}>
           Already have an account?{' '}
           <Link
             href="/login"
