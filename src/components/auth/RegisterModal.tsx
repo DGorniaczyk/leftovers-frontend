@@ -45,7 +45,7 @@ export function RegisterModal({ open, onClose }: RegisterModalProps) {
       slotProps={{ paper: { sx: { borderRadius: 1, padding: 2.5, width: '100%', maxWidth: 420 } } }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <IconButton onClick={onClose}>
+        <IconButton onClick={onClose} aria-label="close">
           <CloseIcon />
         </IconButton>
       </Box>
