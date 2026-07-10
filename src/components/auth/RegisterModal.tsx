@@ -8,11 +8,13 @@ import {
   Typography,
   Button,
   CircularProgress,
+  Checkbox,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { useRegisterModal } from './useRegisterModal';
+import { EMAIL_PATTERN, PASSWORD_PATTERN } from '../constants/validation';
 
 interface RegisterModalProps {
   open: boolean;
@@ -20,21 +22,8 @@ interface RegisterModalProps {
 }
 
 export function RegisterModal({ open, onClose }: RegisterModalProps) {
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    termsAccepted,
-    setTermsAccepted,
-    showPassword,
-    setShowPassword,
-    loading,
-    emailValid,
-    passwordValid,
-    canSubmit,
-    handleSubmit,
-  } = useRegisterModal({ open, onSuccess: onClose });
+  const { register, errors, showPassword, setShowPassword, loading, canSubmit, handleSubmit } =
+    useRegisterModal({ open, onSuccess: onClose });
 
   return (
     <Dialog
@@ -49,7 +38,12 @@ export function RegisterModal({ open, onClose }: RegisterModalProps) {
           <CloseIcon />
         </IconButton>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+      >
         <Typography variant="h4" sx={{ font: 'Poppins', fontWeight: 600 }}>
           Sign up
         </Typography>
@@ -58,84 +52,62 @@ export function RegisterModal({ open, onClose }: RegisterModalProps) {
           Create an account for free
         </Typography>
 
+        {/* ── Email ── */}
         <TextField
           label="E-mail address*"
           placeholder="Enter your email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          error={!emailValid && email.length > 0}
+          type="email"
           fullWidth
-          slotProps={{
-            inputLabel: { shrink: true },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: 'secondary',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: 'primary',
-              },
-            },
-          }}
+          error={Boolean(errors.email)}
+          helperText={errors.email?.message}
+          slotProps={{ inputLabel: { shrink: true } }}
+          {...register('email', {
+            required: 'E-mail address is required.',
+            pattern: { value: EMAIL_PATTERN, message: 'Enter a valid email.' },
+          })}
         />
-        {!emailValid && email.length > 0 && (
-          <Typography sx={{ fontSize: 12, color: 'error.main' }}>Enter a valid email</Typography>
-        )}
 
         <TextField
           label="Password*"
           placeholder="Create a password"
-          value={password}
           type={showPassword ? 'text' : 'password'}
-          onChange={(event) => setPassword(event.target.value)}
           fullWidth
-          error={password.length > 0 && !passwordValid}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: 'secondary',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: 'primary',
-              },
-            },
-          }}
+          error={Boolean(errors.password)}
+          helperText={errors.password?.message}
           slotProps={{
             inputLabel: { shrink: true },
             input: {
               endAdornment: (
                 <InputAdornment position="end">
-                  {' '}
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={() => setShowPassword((previous) => !previous)}
+                    onClick={() => setShowPassword((prev) => !prev)}
                     edge="end"
                   >
-                    {' '}
-                    {showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}{' '}
-                  </IconButton>{' '}
+                    {showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
+                  </IconButton>
                 </InputAdornment>
               ),
             },
           }}
+          {...register('password', {
+            required: 'Password is required.',
+            pattern: {
+              value: PASSWORD_PATTERN,
+              message:
+                'Use at least 8 characters, including uppercase, lowercase, a number, and a symbol.',
+            },
+          })}
         />
-        {password.length > 0 && !passwordValid && (
-          <Typography sx={{ fontSize: 12, color: 'error.main' }}>
-            Use at least 8 characters, including uppercase, lowercase, a number, and a symbol
-          </Typography>
-        )}
 
-        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, justifyContent: 'left' }}>
-          <input
-            type="checkbox"
-            checked={termsAccepted}
-            onChange={(event) => setTermsAccepted(event.target.checked)}
-            style={{ marginTop: 4 }}
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.5, mt: 1 }}>
+          <Checkbox
+            aria-label="Accept terms and conditions"
+            {...register('terms', { required: true })}
+            size="small"
+            sx={{ p: 0, mt: '1px' }}
           />
-
           <Typography variant="body2">
-            {' '}
             Acceptance of{' '}
             <Link
               href="/tos"
@@ -153,14 +125,14 @@ export function RegisterModal({ open, onClose }: RegisterModalProps) {
               sx={{ color: 'text.primary', fontWeight: 'bold' }}
             >
               Privacy Policy
-            </Link>{' '}
+            </Link>
           </Typography>
         </Box>
 
         <Button
+          type="submit"
           variant="contained"
           disabled={!canSubmit}
-          onClick={handleSubmit}
           sx={{ mt: 1, height: 44, width: 220 }}
         >
           {loading ? <CircularProgress size={22} color="inherit" /> : 'Create an account'}
@@ -168,14 +140,7 @@ export function RegisterModal({ open, onClose }: RegisterModalProps) {
 
         <Typography variant="body2" sx={{ mt: 1, textAlign: 'left' }}>
           Already have an account?{' '}
-          <Link
-            href="/login"
-            sx={{
-              fontWeight: 'bold',
-              color: 'text.primary',
-            }}
-            underline="always"
-          >
+          <Link href="/login" sx={{ fontWeight: 'bold', color: 'text.primary' }} underline="always">
             Login
           </Link>
         </Typography>
