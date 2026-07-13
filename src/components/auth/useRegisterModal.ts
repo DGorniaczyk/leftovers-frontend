@@ -18,7 +18,7 @@ interface UseRegisterModalProps {
 export function useRegisterModal({ open, onSuccess }: UseRegisterModalProps) {
   const showSnackbar = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<RegisterFormValues>({
     defaultValues: { email: '', password: '', terms: false },
@@ -37,15 +37,15 @@ export function useRegisterModal({ open, onSuccess }: UseRegisterModalProps) {
     if (!open) {
       reset();
       setShowPassword(false);
-      setLoading(false);
+      setIsSubmitting(false);
     }
   }, [open, reset]);
 
-  const canSubmit = isValid && !loading;
+  const canSubmit = isValid && !isSubmitting;
 
   const onSubmit = async (data: RegisterFormValues) => {
     try {
-      setLoading(true);
+      setIsSubmitting(true);
       await registerUser({ email: data.email, password: data.password });
       showSnackbar({
         message:
@@ -56,7 +56,7 @@ export function useRegisterModal({ open, onSuccess }: UseRegisterModalProps) {
     } catch {
       showSnackbar({ message: 'Registration failed. Please try again.' });
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -66,7 +66,7 @@ export function useRegisterModal({ open, onSuccess }: UseRegisterModalProps) {
     watch,
     showPassword,
     setShowPassword,
-    loading,
+    isSubmitting,
     canSubmit,
     handleSubmit: handleSubmit(onSubmit),
     EMAIL_PATTERN,

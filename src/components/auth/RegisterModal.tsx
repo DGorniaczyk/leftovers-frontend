@@ -23,7 +23,7 @@ interface RegisterModalProps {
 }
 
 export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalProps) {
-  const { register, errors, showPassword, setShowPassword, loading, canSubmit, handleSubmit } =
+  const { register, errors, showPassword, setShowPassword, isSubmitting, canSubmit, handleSubmit } =
     useRegisterModal({ open, onSuccess: onClose });
 
   return (
@@ -136,7 +136,7 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
           disabled={!canSubmit}
           sx={{ mt: 1, height: 44, width: 220 }}
         >
-          {loading ? <CircularProgress size={22} color="inherit" /> : 'Create an account'}
+          {isSubmitting ? <CircularProgress size={22} color="inherit" /> : 'Create an account'}
         </Button>
 
         <Typography variant="body2" sx={{ mt: 1, textAlign: 'left' }}>
@@ -144,11 +144,14 @@ export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalP
           <Link
             component="button"
             type="button"
-            fontWeight={700}
-            color="text.primary"
             underline="always"
             onClick={onSwitchToLogin}
-            sx={{ verticalAlign: 'baseline', cursor: 'pointer' }}
+            sx={{
+              verticalAlign: 'baseline',
+              cursor: 'pointer',
+              fontWeight: 700,
+              color: 'text.primary',
+            }}
           >
             Login
           </Link>
