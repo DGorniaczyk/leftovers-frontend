@@ -9,8 +9,8 @@ import {
   CircularProgress,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { EMAIL_PATTERN } from '../constants/validation';
 import { useForgotPasswordModal } from './useForgotPasswordModal';
+import { EMAIL_PATTERN } from '../constants/validation';
 
 interface ForgotPasswordModalProps {
   open: boolean;
@@ -90,7 +90,7 @@ export function ForgotPasswordModal({ open, onClose }: ForgotPasswordModalProps)
             <Button
               type="submit"
               variant="contained"
-              disabled={!canSubmit || loading}
+              disabled={!canSubmit}
               sx={{
                 textTransform: 'none',
                 fontWeight: 600,
