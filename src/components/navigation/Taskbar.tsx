@@ -27,8 +27,6 @@ import { isAuthenticated, subscribe, removeToken } from '../../api/auth/authServ
 import { useNavigate } from 'react-router';
 import { useAuthModals } from '../context/AuthModalContext';
 
-const BRAND_GREEN = '#2e7d32';
-
 const SearchWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -39,8 +37,8 @@ const SearchWrapper = styled('div')(({ theme }) => ({
   flexGrow: 1,
   maxWidth: 560,
   '&:focus-within': {
-    borderColor: BRAND_GREEN,
-    boxShadow: `0 0 0 2px ${BRAND_GREEN}22`,
+    borderColor: theme.palette.primary.main,
+    boxShadow: `0 0 0 2px ${theme.palette.primary.main}22`,
   },
   transition: 'box-shadow 0.2s, border-color 0.2s',
 }));
@@ -53,12 +51,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const SearchIconBtn = styled(IconButton)(() => ({
+const SearchIconBtn = styled(IconButton)(({ theme }) => ({
   color: '#fff',
-  backgroundColor: BRAND_GREEN,
+  backgroundColor: theme.palette.primary.main,
   borderRadius: 0,
   padding: '8px 12px',
-  '&:hover': { backgroundColor: '#1b5e20' },
+  '&:hover': { backgroundColor: theme.palette.primary.dark },
 }));
 
 export default function Taskbar() {
@@ -144,7 +142,7 @@ export default function Taskbar() {
               {isLoggedIn && (
                 <Button
                   sx={{
-                    color: BRAND_GREEN,
+                    color: theme.palette.primary.main,
                     fontWeight: 500,
                     textTransform: 'none',
                     fontSize: 15,
@@ -191,7 +189,7 @@ export default function Taskbar() {
                   <Button
                     onClick={() => openLogin()}
                     sx={{
-                      color: BRAND_GREEN,
+                      color: theme.palette.primary.main,
                       fontWeight: 500,
                       textTransform: 'none',
                       fontSize: 15,
@@ -204,14 +202,14 @@ export default function Taskbar() {
                     variant="contained"
                     onClick={() => openRegister()}
                     sx={{
-                      backgroundColor: BRAND_GREEN,
+                      backgroundColor: theme.palette.primary.main,
                       color: '#fff',
                       fontWeight: 600,
                       textTransform: 'none',
                       fontSize: 15,
                       borderRadius: 1,
                       px: 2.5,
-                      '&:hover': { backgroundColor: '#1b5e20' },
+                      '&:hover': { backgroundColor: theme.palette.primary.dark },
                     }}
                   >
                     Sign up
@@ -227,14 +225,14 @@ export default function Taskbar() {
                     endIcon={accountAnchor ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     onClick={handleAccountOpen}
                     sx={{
-                      backgroundColor: BRAND_GREEN,
+                      backgroundColor: theme.palette.primary.main,
                       color: '#fff',
                       fontWeight: 600,
                       textTransform: 'none',
                       fontSize: 15,
                       borderRadius: 1,
                       px: 2.5,
-                      '&:hover': { backgroundColor: '#1b5e20' },
+                      '&:hover': { backgroundColor: theme.palette.primary.dark },
                     }}
                   >
                     My account
@@ -338,8 +336,8 @@ export default function Taskbar() {
                 variant="outlined"
                 onClick={() => openLogin()}
                 sx={{
-                  color: BRAND_GREEN,
-                  borderColor: BRAND_GREEN,
+                  color: theme.palette.primary.main,
+                  borderColor: theme.palette.primary.main,
                   fontWeight: 600,
                   textTransform: 'none',
                   fontSize: 15,
@@ -352,12 +350,12 @@ export default function Taskbar() {
                 variant="contained"
                 onClick={() => openRegister()}
                 sx={{
-                  backgroundColor: BRAND_GREEN,
+                  backgroundColor: theme.palette.primary.main,
                   color: '#fff',
                   fontWeight: 600,
                   textTransform: 'none',
                   fontSize: 15,
-                  '&:hover': { backgroundColor: '#1b5e20' },
+                  '&:hover': { backgroundColor: theme.palette.primary.dark },
                 }}
               >
                 Sign up

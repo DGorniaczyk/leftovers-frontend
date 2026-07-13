@@ -15,6 +15,7 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { useLoginModal } from './useLoginModal';
 import { EMAIL_PATTERN } from '../constants/validation';
+import { useAuthModals } from '../context/AuthModalContext';
 
 interface LoginModalProps {
   open: boolean;
@@ -25,6 +26,7 @@ interface LoginModalProps {
 export function LoginModal({ open, onClose, onSwitchToRegister }: LoginModalProps) {
   const { register, errors, showPassword, setShowPassword, loading, canSubmit, handleSubmit } =
     useLoginModal({ open, onSuccess: onClose });
+  const { openForgotPassword } = useAuthModals();
 
   return (
     <Dialog
@@ -96,11 +98,16 @@ export function LoginModal({ open, onClose, onSwitchToRegister }: LoginModalProp
           />
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 0.5 }}>
             <Link
-              href="/forgot-password"
+              component="button"
+              type="button"
               variant="body2"
               color="text.secondary"
               underline="hover"
-              onClick={onClose}
+              onClick={() => {
+                onClose();
+                openForgotPassword();
+              }}
+              sx={{ cursor: 'pointer', background: 'none', border: 'none' }}
             >
               Forgot your password?
             </Link>

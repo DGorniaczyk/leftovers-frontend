@@ -1,10 +1,12 @@
 import { createContext, useContext, useState } from 'react';
 import { RegisterModal } from '../auth/RegisterModal';
 import { LoginModal } from '../auth/LoginModal';
+import { ForgotPasswordModal } from '../auth/ForgotPasswordModal';
 
 interface AuthModalsContextValue {
   openRegister: () => void;
   openLogin: () => void;
+  openForgotPassword: () => void;
 }
 
 const AuthModalsContext = createContext<AuthModalsContextValue | null>(null);
@@ -12,12 +14,14 @@ const AuthModalsContext = createContext<AuthModalsContextValue | null>(null);
 export function AuthModalsProvider({ children }: { children: React.ReactNode }) {
   const [registerOpen, setRegisterOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
 
   return (
     <AuthModalsContext.Provider
       value={{
         openRegister: () => setRegisterOpen(true),
         openLogin: () => setLoginOpen(true),
+        openForgotPassword: () => setForgotPasswordOpen(true),
       }}
     >
       {children}
@@ -37,6 +41,7 @@ export function AuthModalsProvider({ children }: { children: React.ReactNode }) 
           setRegisterOpen(true);
         }}
       />
+      <ForgotPasswordModal open={forgotPasswordOpen} onClose={() => setForgotPasswordOpen(false)} />
     </AuthModalsContext.Provider>
   );
 }
