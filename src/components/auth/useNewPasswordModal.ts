@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router';
 import { useSnackbar } from '../common/Snackbar';
 import { setNewPassword } from '../../api/auth/resetPasswordService';
 import { PASSWORD_PATTERN } from '../constants/validation';
+import { useAuthModals } from '../context/AuthModalContext';
 
 export interface NewPasswordFormValues {
   password: string;
@@ -16,6 +17,7 @@ interface UseNewPasswordModalProps {
 
 export function useNewPasswordModal({ onClose }: UseNewPasswordModalProps) {
   const showSnackbar = useSnackbar();
+  const { openLogin } = useAuthModals();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -52,19 +54,15 @@ export function useNewPasswordModal({ onClose }: UseNewPasswordModalProps) {
 
     try {
       setLoading(true);
-
-      const message = await setNewPassword({
-        token,
-        password: data.password,
-      });
-
-      showSnackbar({ message });
-      handleClose();
-      navigate('/');
-    } catch (error) {
+      await setNewPassword({ token, password: data.password });
       showSnackbar({
-        message: error instanceof Error ? error.message : 'Something went wrong. Please try again.',
+        message:
+          '✅ Password changed successfully! You can now log in using your updated credentials.',
       });
+      handleClose();
+      openLogin();
+    } catch {
+      showSnackbar({ message: 'Something went wrong. Please try again.' });
     } finally {
       setLoading(false);
     }
