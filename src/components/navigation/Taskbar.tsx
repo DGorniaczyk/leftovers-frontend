@@ -25,11 +25,10 @@ import { useTheme } from '@mui/material/styles';
 import { fetchCategories, type CategoryOption } from '../../api/categories';
 import { isAuthenticated, subscribe, removeToken } from '../../api/auth/authService';
 import { useNavigate } from 'react-router';
-import { RegisterModal } from '../auth/RegisterModal';
+import { useAuthModals } from '../context/AuthModalContext';
 
 const BRAND_GREEN = '#2e7d32';
 
-// ── Styled components ──────────────────────────────────────────────────────────
 const SearchWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -65,11 +64,11 @@ const SearchIconBtn = styled(IconButton)(() => ({
 export default function Taskbar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { openRegister, openLogin } = useAuthModals();
 
   const [recipesAnchor, setRecipesAnchor] = useState<null | HTMLElement>(null);
   const [accountAnchor, setAccountAnchor] = useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [registerOpen, setRegisterOpen] = useState(false);
   const [categories, setCategories] = useState<CategoryOption[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(isAuthenticated());
 
@@ -190,6 +189,7 @@ export default function Taskbar() {
               {!isLoggedIn && (
                 <>
                   <Button
+                    onClick={() => openLogin()}
                     sx={{
                       color: BRAND_GREEN,
                       fontWeight: 500,
@@ -202,7 +202,7 @@ export default function Taskbar() {
 
                   <Button
                     variant="contained"
-                    onClick={() => setRegisterOpen(true)}
+                    onClick={() => openRegister()}
                     sx={{
                       backgroundColor: BRAND_GREEN,
                       color: '#fff',
@@ -336,6 +336,7 @@ export default function Taskbar() {
               <Button
                 fullWidth
                 variant="outlined"
+                onClick={() => openLogin()}
                 sx={{
                   color: BRAND_GREEN,
                   borderColor: BRAND_GREEN,
@@ -349,7 +350,7 @@ export default function Taskbar() {
               <Button
                 fullWidth
                 variant="contained"
-                onClick={() => setRegisterOpen(true)}
+                onClick={() => openRegister()}
                 sx={{
                   backgroundColor: BRAND_GREEN,
                   color: '#fff',
@@ -365,7 +366,6 @@ export default function Taskbar() {
           </Box>
         </Drawer>
       </AppBar>
-      <RegisterModal open={registerOpen} onClose={() => setRegisterOpen(false)} />
     </>
   );
 }

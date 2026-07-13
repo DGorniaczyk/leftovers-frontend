@@ -19,9 +19,10 @@ import { EMAIL_PATTERN, PASSWORD_PATTERN } from '../constants/validation';
 interface RegisterModalProps {
   open: boolean;
   onClose: () => void;
+  onSwitchToLogin?: () => void;
 }
 
-export function RegisterModal({ open, onClose }: RegisterModalProps) {
+export function RegisterModal({ open, onClose, onSwitchToLogin }: RegisterModalProps) {
   const { register, errors, showPassword, setShowPassword, loading, canSubmit, handleSubmit } =
     useRegisterModal({ open, onSuccess: onClose });
 
@@ -140,7 +141,15 @@ export function RegisterModal({ open, onClose }: RegisterModalProps) {
 
         <Typography variant="body2" sx={{ mt: 1, textAlign: 'left' }}>
           Already have an account?{' '}
-          <Link href="/login" sx={{ fontWeight: 'bold', color: 'text.primary' }} underline="always">
+          <Link
+            component="button"
+            type="button"
+            fontWeight={700}
+            color="text.primary"
+            underline="always"
+            onClick={onSwitchToLogin}
+            sx={{ verticalAlign: 'baseline', cursor: 'pointer' }}
+          >
             Login
           </Link>
         </Typography>
