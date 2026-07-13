@@ -3,17 +3,15 @@ import { getToken } from './auth/authService';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  headers: {},
 });
 
-api.interceptors.request.use((cfg: InternalAxiosRequestConfig) => {
-  const t = getToken();
-  if (t) {
-    if (!cfg.headers) cfg.headers = {} as any;
-    (cfg.headers as Record<string, string>)['Authorization'] = `Bearer ${t}`;
-  }
+api.interceptors.request.use((config) => {
+  const token = getToken();
 
-  return cfg;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export default api;
