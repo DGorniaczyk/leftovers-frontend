@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
 import { useSnackbar } from '../common/Snackbar';
 import { setNewPassword } from '../../api/auth/resetPasswordService';
 import { PASSWORD_PATTERN } from '../constants/validation';
@@ -18,7 +18,6 @@ interface UseNewPasswordModalProps {
 export function useNewPasswordModal({ onClose }: UseNewPasswordModalProps) {
   const showSnackbar = useSnackbar();
   const { openLogin } = useAuthModals();
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const token = searchParams.get('token') ?? '';

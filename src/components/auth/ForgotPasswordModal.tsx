@@ -81,7 +81,7 @@ export function ForgotPasswordModal({ open, onClose }: ForgotPasswordModalProps)
                 borderRadius: 1,
                 color: 'primary.main',
                 borderColor: 'primary.main',
-                height: 44,
+                height: 32,
                 px: 3,
               }}
             >
@@ -95,7 +95,7 @@ export function ForgotPasswordModal({ open, onClose }: ForgotPasswordModalProps)
                 textTransform: 'none',
                 fontWeight: 600,
                 borderRadius: 1,
-                height: 44,
+                height: 32,
                 px: 3,
               }}
             >
