@@ -17,13 +17,11 @@ interface UseLoginModalProps {
 export function useLoginModal({ open, onSuccess }: UseLoginModalProps) {
   const showSnackbar = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<LoginFormValues>({
     defaultValues: { email: '', password: '', rememberMe: false },
     mode: 'onChange',
@@ -33,23 +31,19 @@ export function useLoginModal({ open, onSuccess }: UseLoginModalProps) {
     if (!open) {
       reset();
       setShowPassword(false);
-      setLoading(false);
     }
   }, [open, reset]);
 
-  const canSubmit = isValid && !loading;
+  const canSubmit = isValid && !isSubmitting;
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      setLoading(true);
       await loginUser({ email: data.email, password: data.password, rememberMe: data.rememberMe });
       showSnackbar({ message: 'Welcome back! You are now logged in.' });
       reset();
       onSuccess?.();
     } catch {
       showSnackbar({ message: 'Login failed. Please check your credentials and try again.' });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -58,7 +52,7 @@ export function useLoginModal({ open, onSuccess }: UseLoginModalProps) {
     errors,
     showPassword,
     setShowPassword,
-    loading,
+    loading: isSubmitting,
     canSubmit,
     handleSubmit: handleSubmit(onSubmit),
   };
