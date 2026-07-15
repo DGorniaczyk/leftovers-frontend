@@ -25,6 +25,7 @@ import { useTheme } from '@mui/material/styles';
 import { fetchCategories, type CategoryOption } from '../../api/categories';
 import { isAuthenticated, subscribe, removeToken } from '../../api/auth/authService';
 import { useNavigate } from 'react-router';
+import { RegisterModal } from '../auth/RegisterModal';
 
 const BRAND_GREEN = '#2e7d32';
 
@@ -68,6 +69,7 @@ export default function Taskbar() {
   const [recipesAnchor, setRecipesAnchor] = useState<null | HTMLElement>(null);
   const [accountAnchor, setAccountAnchor] = useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [registerOpen, setRegisterOpen] = useState(false);
   const [categories, setCategories] = useState<CategoryOption[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(isAuthenticated());
 
@@ -104,256 +106,266 @@ export default function Taskbar() {
   };
 
   return (
-    <AppBar
-      position="sticky"
-      elevation={0}
-      sx={{
-        backgroundColor: '#fff',
-        borderBottom: '1px solid #e0e0e0',
-        color: 'text.primary',
-      }}
-    >
-      <Toolbar sx={{ gap: 2, px: { xs: 2, md: 4 }, minHeight: { xs: 60, md: 68 } }}>
-        {/* ── Logo ── */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mr: 1 }}>
-          <img src={logo} alt="Logo" style={{ height: 40 }} />
-        </Box>
-
-        {/* ── Search bar (hidden on mobile, shown in drawer instead) ── */}
-        {!isMobile && (
-          <SearchWrapper>
-            <StyledInputBase
-              placeholder="Search recipes…"
-              inputProps={{ 'aria-label': 'search recipes' }}
-            />
-
-            <SearchIconBtn disableRipple aria-label="search">
-              <SearchIcon fontSize="small" />
-            </SearchIconBtn>
-          </SearchWrapper>
-        )}
-
-        <Box sx={{ flexGrow: 1 }} />
-
-        {/* ── Desktop nav ── */}
-        {!isMobile ? (
-          <>
-            {/* Add recipe when logged in */}
-            {isLoggedIn && (
-              <Button
-                sx={{
-                  color: BRAND_GREEN,
-                  fontWeight: 500,
-                  textTransform: 'none',
-                  fontSize: 15,
-                  mr: 1,
-                }}
-                startIcon={<svg width="0" height="0" />}
-              >
-                + Add recipe
-              </Button>
-            )}
-
-            {/* Recipes dropdown */}
-            <Button
-              endIcon={recipesAnchor ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              onClick={handleRecipesOpen}
-              sx={{ color: 'text.primary', fontWeight: 500, textTransform: 'none', fontSize: 15 }}
-            >
-              Recipes
-            </Button>
-            <Menu
-              anchorEl={recipesAnchor}
-              open={Boolean(recipesAnchor)}
-              onClose={handleRecipesClose}
-              slotProps={{ paper: { sx: { mt: 1, minWidth: 180 } } }}
-            >
-              {categories.map((category) => (
-                <MenuItem
-                  key={category.value}
-                  onClick={handleRecipesClose}
-                  sx={(theme) => ({
-                    fontSize: 14,
-                    borderTop:
-                      category.value !== 'all' ? `1px solid ${theme.palette.divider}` : 'none',
-                  })}
-                >
-                  {category.label}
-                </MenuItem>
-              ))}
-            </Menu>
-
-            {/* Logged-out actions */}
-            {!isLoggedIn && (
-              <>
-                <Button
-                  sx={{ color: BRAND_GREEN, fontWeight: 500, textTransform: 'none', fontSize: 15 }}
-                >
-                  Log in
-                </Button>
-
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: BRAND_GREEN,
-                    color: '#fff',
-                    fontWeight: 600,
-                    textTransform: 'none',
-                    fontSize: 15,
-                    borderRadius: 1,
-                    px: 2.5,
-                    '&:hover': { backgroundColor: '#1b5e20' },
-                  }}
-                >
-                  Sign up
-                </Button>
-              </>
-            )}
-
-            {/* My account when logged in */}
-            {isLoggedIn && (
-              <>
-                <Button
-                  variant="contained"
-                  endIcon={accountAnchor ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                  onClick={handleAccountOpen}
-                  sx={{
-                    backgroundColor: BRAND_GREEN,
-                    color: '#fff',
-                    fontWeight: 600,
-                    textTransform: 'none',
-                    fontSize: 15,
-                    borderRadius: 1,
-                    px: 2.5,
-                    '&:hover': { backgroundColor: '#1b5e20' },
-                  }}
-                >
-                  My account
-                </Button>
-
-                <Menu
-                  anchorEl={accountAnchor}
-                  open={Boolean(accountAnchor)}
-                  onClose={handleAccountClose}
-                  slotProps={{ paper: { sx: { mt: 1, minWidth: 200 } } }}
-                >
-                  <MenuItem
-                    onClick={() => {
-                      handleAccountClose();
-                      navigate('/saved');
-                    }}
-                  >
-                    Saved recipes
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      handleAccountClose();
-                      navigate('/my-recipes');
-                    }}
-                  >
-                    My recipes
-                  </MenuItem>
-                  <Divider />
-                  <MenuItem onClick={handleLogout}>Log out</MenuItem>
-                </Menu>
-              </>
-            )}
-          </>
-        ) : (
-          <IconButton onClick={() => setDrawerOpen(true)} sx={{ color: 'text.primary' }}>
-            <MenuIcon />
-          </IconButton>
-        )}
-      </Toolbar>
-
-      <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <Box sx={{ width: 280, pt: 2 }}>
-          {/* Close */}
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', px: 2, pb: 1 }}>
-            <IconButton onClick={() => setDrawerOpen(false)}>
-              <CloseIcon />
-            </IconButton>
+    <>
+      <AppBar
+        position="sticky"
+        elevation={0}
+        sx={{
+          backgroundColor: '#fff',
+          borderBottom: '1px solid #e0e0e0',
+          color: 'text.primary',
+        }}
+      >
+        <Toolbar sx={{ gap: 2, px: { xs: 2, md: 4 }, minHeight: { xs: 60, md: 68 } }}>
+          {/* ── Logo ── */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mr: 1 }}>
+            <img src={logo} alt="Logo" style={{ height: 40 }} />
           </Box>
 
-          {/* Mobile search */}
-          <Box sx={{ px: 2, pb: 2 }}>
-            <SearchWrapper sx={{ maxWidth: '100%' }}>
+          {/* ── Search bar (hidden on mobile, shown in drawer instead) ── */}
+          {!isMobile && (
+            <SearchWrapper>
               <StyledInputBase
                 placeholder="Search recipes…"
                 inputProps={{ 'aria-label': 'search recipes' }}
-                fullWidth
               />
-              <SearchIconBtn disableRipple>
+
+              <SearchIconBtn disableRipple aria-label="search">
                 <SearchIcon fontSize="small" />
               </SearchIconBtn>
             </SearchWrapper>
-          </Box>
+          )}
 
-          <Divider />
+          <Box sx={{ flexGrow: 1 }} />
 
-          {/* Recipes links */}
-          <List dense>
-            <ListItem disablePadding>
-              <ListItemText
-                primary="Recipes"
-                sx={{
-                  px: 2,
-                  pt: 1,
-                  '& span': { fontWeight: 700, fontSize: 13, color: 'text.secondary' },
-                }}
-              />
-            </ListItem>
-            {categories.map((category) => (
-              <ListItem key={category.value} disablePadding>
-                <ListItemButton
-                  onClick={() => setDrawerOpen(false)}
-                  sx={(theme) => ({
-                    borderTop:
-                      category.value !== 'all' ? `1px solid ${theme.palette.divider}` : 'none',
-                  })}
+          {/* ── Desktop nav ── */}
+          {!isMobile ? (
+            <>
+              {/* Add recipe when logged in */}
+              {isLoggedIn && (
+                <Button
+                  sx={{
+                    color: BRAND_GREEN,
+                    fontWeight: 500,
+                    textTransform: 'none',
+                    fontSize: 15,
+                    mr: 1,
+                  }}
+                  startIcon={<svg width="0" height="0" />}
                 >
-                  <ListItemText
-                    primary={category.label}
-                    sx={{ '& .MuiListItemText-primary': { fontSize: 15 } }}
-                  />
-                </ListItemButton>
+                  + Add recipe
+                </Button>
+              )}
+
+              {/* Recipes dropdown */}
+              <Button
+                endIcon={recipesAnchor ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                onClick={handleRecipesOpen}
+                sx={{ color: 'text.primary', fontWeight: 500, textTransform: 'none', fontSize: 15 }}
+              >
+                Recipes
+              </Button>
+              <Menu
+                anchorEl={recipesAnchor}
+                open={Boolean(recipesAnchor)}
+                onClose={handleRecipesClose}
+                slotProps={{ paper: { sx: { mt: 1, minWidth: 180 } } }}
+              >
+                {categories.map((category) => (
+                  <MenuItem
+                    key={category.value}
+                    onClick={handleRecipesClose}
+                    sx={(theme) => ({
+                      fontSize: 14,
+                      borderTop:
+                        category.value !== 'all' ? `1px solid ${theme.palette.divider}` : 'none',
+                    })}
+                  >
+                    {category.label}
+                  </MenuItem>
+                ))}
+              </Menu>
+
+              {/* Logged-out actions */}
+              {!isLoggedIn && (
+                <>
+                  <Button
+                    sx={{
+                      color: BRAND_GREEN,
+                      fontWeight: 500,
+                      textTransform: 'none',
+                      fontSize: 15,
+                    }}
+                  >
+                    Log in
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    onClick={() => setRegisterOpen(true)}
+                    sx={{
+                      backgroundColor: BRAND_GREEN,
+                      color: '#fff',
+                      fontWeight: 600,
+                      textTransform: 'none',
+                      fontSize: 15,
+                      borderRadius: 1,
+                      px: 2.5,
+                      '&:hover': { backgroundColor: '#1b5e20' },
+                    }}
+                  >
+                    Sign up
+                  </Button>
+                </>
+              )}
+
+              {/* My account when logged in */}
+              {isLoggedIn && (
+                <>
+                  <Button
+                    variant="contained"
+                    endIcon={accountAnchor ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    onClick={handleAccountOpen}
+                    sx={{
+                      backgroundColor: BRAND_GREEN,
+                      color: '#fff',
+                      fontWeight: 600,
+                      textTransform: 'none',
+                      fontSize: 15,
+                      borderRadius: 1,
+                      px: 2.5,
+                      '&:hover': { backgroundColor: '#1b5e20' },
+                    }}
+                  >
+                    My account
+                  </Button>
+
+                  <Menu
+                    anchorEl={accountAnchor}
+                    open={Boolean(accountAnchor)}
+                    onClose={handleAccountClose}
+                    slotProps={{ paper: { sx: { mt: 1, minWidth: 200 } } }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        handleAccountClose();
+                        navigate('/saved');
+                      }}
+                    >
+                      Saved recipes
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        handleAccountClose();
+                        navigate('/my-recipes');
+                      }}
+                    >
+                      My recipes
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem onClick={handleLogout}>Log out</MenuItem>
+                  </Menu>
+                </>
+              )}
+            </>
+          ) : (
+            <IconButton onClick={() => setDrawerOpen(true)} sx={{ color: 'text.primary' }}>
+              <MenuIcon />
+            </IconButton>
+          )}
+        </Toolbar>
+
+        <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+          <Box sx={{ width: 280, pt: 2 }}>
+            {/* Close */}
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', px: 2, pb: 1 }}>
+              <IconButton onClick={() => setDrawerOpen(false)}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+
+            {/* Mobile search */}
+            <Box sx={{ px: 2, pb: 2 }}>
+              <SearchWrapper sx={{ maxWidth: '100%' }}>
+                <StyledInputBase
+                  placeholder="Search recipes…"
+                  inputProps={{ 'aria-label': 'search recipes' }}
+                  fullWidth
+                />
+                <SearchIconBtn disableRipple>
+                  <SearchIcon fontSize="small" />
+                </SearchIconBtn>
+              </SearchWrapper>
+            </Box>
+
+            <Divider />
+
+            {/* Recipes links */}
+            <List dense>
+              <ListItem disablePadding>
+                <ListItemText
+                  primary="Recipes"
+                  sx={{
+                    px: 2,
+                    pt: 1,
+                    '& span': { fontWeight: 700, fontSize: 13, color: 'text.secondary' },
+                  }}
+                />
               </ListItem>
-            ))}
-          </List>
+              {categories.map((category) => (
+                <ListItem key={category.value} disablePadding>
+                  <ListItemButton
+                    onClick={() => setDrawerOpen(false)}
+                    sx={(theme) => ({
+                      borderTop:
+                        category.value !== 'all' ? `1px solid ${theme.palette.divider}` : 'none',
+                    })}
+                  >
+                    <ListItemText
+                      primary={category.label}
+                      sx={{ '& .MuiListItemText-primary': { fontSize: 15 } }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
 
-          <Divider />
+            <Divider />
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, p: 2, pt: 2 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={{
-                color: BRAND_GREEN,
-                borderColor: BRAND_GREEN,
-                fontWeight: 600,
-                textTransform: 'none',
-                fontSize: 15,
-              }}
-            >
-              Log in
-            </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{
-                backgroundColor: BRAND_GREEN,
-                color: '#fff',
-                fontWeight: 600,
-                textTransform: 'none',
-                fontSize: 15,
-                '&:hover': { backgroundColor: '#1b5e20' },
-              }}
-            >
-              Sign up
-            </Button>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, p: 2, pt: 2 }}>
+              <Button
+                fullWidth
+                variant="outlined"
+                sx={{
+                  color: BRAND_GREEN,
+                  borderColor: BRAND_GREEN,
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  fontSize: 15,
+                }}
+              >
+                Log in
+              </Button>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => setRegisterOpen(true)}
+                sx={{
+                  backgroundColor: BRAND_GREEN,
+                  color: '#fff',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  fontSize: 15,
+                  '&:hover': { backgroundColor: '#1b5e20' },
+                }}
+              >
+                Sign up
+              </Button>
+            </Box>
           </Box>
-        </Box>
-      </Drawer>
-    </AppBar>
+        </Drawer>
+      </AppBar>
+      <RegisterModal open={registerOpen} onClose={() => setRegisterOpen(false)} />
+    </>
   );
 }
