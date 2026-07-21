@@ -8,11 +8,12 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string;
+  accessToken: string;
 }
 
 export async function loginUser(payload: LoginRequest): Promise<LoginResponse> {
   const { data } = await httpClient.post<LoginResponse>('/auth/login', payload);
-  setToken(data.token);
+
+  setToken(data.accessToken);
   return data;
 }
