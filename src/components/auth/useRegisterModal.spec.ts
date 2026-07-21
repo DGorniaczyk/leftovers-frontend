@@ -33,7 +33,7 @@ describe('useRegisterModal — initial state', () => {
 
   it('initialises not loading', () => {
     const { result } = renderRegisterModal();
-    expect(result.current.loading).toBe(false);
+    expect(result.current.isSubmitting).toBe(false);
   });
 
   it('exposes a register function for RHF field wiring', () => {
@@ -64,7 +64,7 @@ describe('useRegisterModal — form reset on close', () => {
 
     rerender({ open: false });
 
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    await waitFor(() => expect(result.current.isSubmitting).toBe(false));
   });
 
   it('canSubmit becomes false after reset', async () => {
@@ -126,6 +126,6 @@ describe('useRegisterModal — handleSubmit failure', () => {
     vi.spyOn(registerService, 'registerUser').mockRejectedValue(new Error('Server error'));
     const { result } = renderRegisterModal();
     await act(async () => result.current.handleSubmit(new Event('submit') as any));
-    expect(result.current.loading).toBe(false);
+    expect(result.current.isSubmitting).toBe(false);
   });
 });
