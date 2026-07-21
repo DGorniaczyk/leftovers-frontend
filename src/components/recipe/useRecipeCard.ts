@@ -11,7 +11,8 @@ interface UseRecipeCardOptions {
 
 export function useRecipeCard({ recipe, isAuthenticated }: UseRecipeCardOptions) {
   const navigate = useNavigate();
-  const { openLogin } = useAuthModals();
+
+  const [savePromptOpen, setSavePromptOpen] = useState(false);
 
   const [saved, setSaved] = useState(recipe.isSaved);
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,7 @@ export function useRecipeCard({ recipe, isAuthenticated }: UseRecipeCardOptions)
 
   async function toggleSaved() {
     if (!isAuthenticated) {
-      openLogin();
+      setSavePromptOpen(true);
       return;
     }
 
@@ -50,5 +51,7 @@ export function useRecipeCard({ recipe, isAuthenticated }: UseRecipeCardOptions)
     loading,
     toggleSaved,
     openRecipe,
+    savePromptOpen,
+    closeSavePrompt: () => setSavePromptOpen(false),
   };
 }

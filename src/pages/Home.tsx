@@ -6,6 +6,7 @@ import { RecipeOfTheDay } from '../components/recipe/RecipeOfTheDay';
 import { useRecipeCard } from '../components/recipe/useRecipeCard';
 import { useRecipes } from '../components/recipe/useRecipes';
 import { useAuth } from '../api/auth/useAuth';
+import { SaveRecipeModal } from '../components/auth/SaveRecipeGuestModal';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import type { Recipe } from '../components/recipe/types';
 
@@ -16,16 +17,20 @@ function RecipeCardWrapper({
   recipe: Recipe;
   isAuthenticated: boolean;
 }) {
-  const { saved, loading, toggleSaved, openRecipe } = useRecipeCard({ recipe, isAuthenticated });
+  const { saved, loading, toggleSaved, openRecipe, savePromptOpen, closeSavePrompt } =
+    useRecipeCard({ recipe, isAuthenticated });
 
   return (
-    <RecipeCard
-      recipe={recipe}
-      saved={saved}
-      loading={loading}
-      onOpen={openRecipe}
-      onToggleSaved={toggleSaved}
-    />
+    <>
+      <RecipeCard
+        recipe={recipe}
+        saved={saved}
+        loading={loading}
+        onOpen={openRecipe}
+        onToggleSaved={toggleSaved}
+      />
+      <SaveRecipeModal open={savePromptOpen} onClose={closeSavePrompt} />
+    </>
   );
 }
 

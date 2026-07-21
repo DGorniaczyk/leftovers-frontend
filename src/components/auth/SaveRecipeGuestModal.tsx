@@ -4,7 +4,6 @@ import { useAuthModals } from '../context/AuthModalContext';
 interface SaveRecipeModalProps {
   open: boolean;
   onClose: () => void;
-  onLogin: () => void;
 }
 
 export function SaveRecipeModal({ open, onClose }: SaveRecipeModalProps) {
@@ -15,37 +14,31 @@ export function SaveRecipeModal({ open, onClose }: SaveRecipeModalProps) {
       open={open}
       onClose={onClose}
       fullWidth
-      maxWidth="sm"
+      maxWidth="xs"
       slotProps={{
         paper: {
           sx: {
-            borderRadius: 1,
-            p: 3.5,
+            borderRadius: 2,
+            p: 2.5,
             width: '100%',
-            maxWidth: 750,
+            maxWidth: 480,
           },
         },
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <Typography variant="h4" fontWeight={600}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+        {' '}
+        <Typography variant="h6" fontWeight={600}>
+          {' '}
           Login to save the recipe
         </Typography>
-
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body2" color="text.secondary">
+          {' '}
           If you want to save this recipe you need to login or create an account. Don't miss out on
           the convenience of having your favorite recipes at your fingertips whenever you crave
           them!
         </Typography>
-
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            gap: 2,
-            mt: 2,
-          }}
-        >
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1.5, mt: 1 }}>
           <Button
             variant="outlined"
             onClick={onClose}
@@ -53,13 +46,12 @@ export function SaveRecipeModal({ open, onClose }: SaveRecipeModalProps) {
               textTransform: 'none',
               fontWeight: 600,
               borderRadius: 1,
-              minWidth: 92,
-              height: 40,
+              minWidth: 80,
+              height: 36,
             }}
           >
             Cancel
           </Button>
-
           <Button
             variant="contained"
             onClick={() => {
@@ -70,8 +62,8 @@ export function SaveRecipeModal({ open, onClose }: SaveRecipeModalProps) {
               textTransform: 'none',
               fontWeight: 600,
               borderRadius: 1,
-              minWidth: 92,
-              height: 40,
+              minWidth: 80,
+              height: 36,
             }}
           >
             Login

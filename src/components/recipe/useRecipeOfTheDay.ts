@@ -10,18 +10,18 @@ export function useRecipeOfTheDayCard() {
   const { isAuthenticated } = useAuth();
   const { openLogin } = useAuthModals();
   const navigate = useNavigate();
+  const [savePromptOpen, setSavePromptOpen] = useState(false);
 
   const [saved, setSaved] = useState(false);
   const [savingLoading, setSavingLoading] = useState(false);
 
-  // Sync saved state once the recipe loads
   useEffect(() => {
     if (recipe) setSaved(recipe.isSaved ?? false);
   }, [recipe]);
 
   async function toggleSaved() {
     if (!isAuthenticated) {
-      openLogin();
+      setSavePromptOpen(true);
       return;
     }
 
@@ -46,5 +46,14 @@ export function useRecipeOfTheDayCard() {
     if (recipe) navigate(`/recipes/${recipe.id}`);
   }
 
-  return { recipe, loading, saved, savingLoading, toggleSaved, openRecipe };
+  return {
+    recipe,
+    loading,
+    saved,
+    savingLoading,
+    toggleSaved,
+    openRecipe,
+    savePromptOpen,
+    closeSavePrompt: () => setSavePromptOpen(false),
+  };
 }

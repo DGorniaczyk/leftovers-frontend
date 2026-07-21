@@ -10,6 +10,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import BookmarkOutlinedIcon from '@mui/icons-material/BookmarkOutlined';
 import { useRecipeOfTheDayCard } from './useRecipeOfTheDay';
+import { SaveRecipeModal } from '../auth/SaveRecipeGuestModal';
 
 function RecipeOfTheDaySkeleton() {
   return (
@@ -36,8 +37,16 @@ function RecipeOfTheDaySkeleton() {
 }
 
 export function RecipeOfTheDay() {
-  const { recipe, loading, saved, savingLoading, toggleSaved, openRecipe } =
-    useRecipeOfTheDayCard();
+  const {
+    recipe,
+    loading,
+    saved,
+    savingLoading,
+    toggleSaved,
+    openRecipe,
+    savePromptOpen,
+    closeSavePrompt,
+  } = useRecipeOfTheDayCard();
 
   if (loading) return <RecipeOfTheDaySkeleton />;
   if (!recipe) return null;
@@ -185,6 +194,7 @@ export function RecipeOfTheDay() {
           View the recipe
         </Button>
       </Box>
+      <SaveRecipeModal open={savePromptOpen} onClose={closeSavePrompt} />
     </Box>
   );
 }
