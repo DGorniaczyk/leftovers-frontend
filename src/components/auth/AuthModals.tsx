@@ -3,8 +3,8 @@ import { RegisterModal } from './RegisterModal';
 import { LoginModal } from './LoginModal';
 
 export function AuthModals() {
-  const [registerOpen, setRegisterOpen] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
+  const [registerOpen, setRegisterOpen] = useState<boolean>(false);
+  const [loginOpen, setLoginOpen] = useState<boolean>(false);
 
   return (
     <>
