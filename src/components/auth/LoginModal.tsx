@@ -133,20 +133,19 @@ export function LoginModal({ open, onClose, onSwitchToRegister }: LoginModalProp
         {/* ── Switch to register ── */}
         <Typography variant="body2">
           Don't have an account yet?{' '}
-          <Link
-            component="button"
-            type="button"
-            underline="always"
+          <Typography
             onClick={onSwitchToRegister}
             sx={{
               verticalAlign: 'baseline',
               cursor: 'pointer',
               fontWeight: 700,
               color: 'text.primary',
+              textDecoration: 'underline',
+              display: 'inline',
             }}
           >
             Create an account
-          </Link>
+          </Typography>
         </Typography>
       </Box>
     </Dialog>
