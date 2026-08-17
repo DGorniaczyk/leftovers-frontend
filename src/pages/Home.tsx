@@ -57,7 +57,6 @@ export default function Home() {
             <RecipeOfTheDay />
           </Box>
 
-          {/* ── New Recipes ── */}
           <Box>
             <Typography variant="h6" fontWeight={700} sx={{ mb: 1 }}>
               New Recipes
@@ -78,7 +77,6 @@ export default function Home() {
                   ))}
             </Grid>
 
-            {/* ── See all recipes ── */}
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
               <Button
                 variant="contained"

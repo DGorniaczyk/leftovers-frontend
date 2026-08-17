@@ -7,6 +7,8 @@ export async function fetchRecipes(params?: {
   details?: boolean;
   startDate?: string;
   endDate?: string;
+  sortBy?: 'date' | 'rating';
+  sortDirection?: 'asc' | 'desc';
 }) {
   const response = await httpClient.get('/recipes', { params });
   return response.data;
